@@ -1,0 +1,70 @@
+{% extends 'hostel/base.html' %}
+
+{% block title %}Application Status - Hostel Allotment System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Application Status</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h4>Hostel Information</h4>
+                    <p><strong>Hostel Name:</strong> {{ application.hostel.name }}</p>
+                    <p><strong>University:</strong> {{ application.hostel.university.name }}</p>
+                    <p><strong>Address:</strong> {{ application.hostel.address }}</p>
+                    {% if application.room %}
+                        <p><strong>Room Number:</strong> {{ application.room.room_number }}</p>
+                        <p><strong>Room Type:</strong> {{ application.room.get_room_type_display }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <h4>Application Details</h4>
+                    <table class="table">
+                        <tr>
+                            <th>Hostel:</th>
+                            <td>{{ application.hostel.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Room:</th>
+                            <td>{{ application.room.room_number }} ({{ application.room.room_type }})</td>
+                        </tr>
+                        <tr>
+                            <th>Status:</th>
+                            <td>
+                                <span class="badge {% if application.status == 'pending' %}bg-warning{% elif application.status == 'approved' %}bg-success{% else %}bg-danger{% endif %}">
+                                    {{ application.status|title }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% if application.status == 'approved' %}
+                        <tr>
+                            <th>Allotment Date:</th>
+                            <td>{{ application.allotment_date|date:"F d, Y" }}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+
+                {% if application.status == 'approved' and application.student_remarks %}
+                <div class="mb-4">
+                    <h4>Student Remarks</h4>
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="mb-0">{{ application.student_remarks }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="d-grid gap-2">
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

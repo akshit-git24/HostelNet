@@ -1,0 +1,68 @@
+{% extends 'hostel/base.html' %}
+
+{% block title %}University Dashboard - Hostel Allotment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>University Information</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Name:</strong> {{ university.name }}</p>
+                <p><strong>Location:</strong> {{ university.location }}</p>
+                <p><strong>Contact Email:</strong> {{ university.contact_email }}</p>
+                <p><strong>Contact Phone:</strong> {{ university.contact_phone }}</p>
+                <p><strong>Status:</strong> 
+                    {% if university.is_verified %}
+                        <span class="badge bg-success">Verified</span>
+                    {% else %}
+                        <span class="badge bg-warning">Pending Verification</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Hostels</h4>
+                <a href="{% url 'add_hostel' %}" class="btn btn-primary">Add New Hostel</a>
+            </div>
+            <div class="card-body">
+                {% if hostels %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Total Capacity</th>
+                                    <th>Available Capacity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for hostel in hostels %}
+                                    <tr>
+                                        <td>{{ hostel.name }}</td>
+                                        <td>{{ hostel.total_capacity }}</td>
+                                        <td>{{ hostel.available_capacity }}</td>
+                                        <td>
+                                            <a href="{% url 'view_hostel' hostel.id %}" class="btn btn-sm btn-info">View Rooms</a>
+                                            <a href="{% url 'edit_hostel' hostel.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center">No hostels found. Add your first hostel!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

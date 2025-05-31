@@ -1,0 +1,41 @@
+{% extends 'hostel/base.html' %}
+
+{% block title %}Welcome - Hostel Allotment System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="display-4 mb-4">Welcome to Hostel Allotment System</h1>
+                <p class="lead mb-4">A comprehensive platform for managing hostel accommodations in universities.</p>
+                
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h3>For Students</h3>
+                                <p>Register and apply for hostel accommodation in your university.</p>
+                                <a href="{% url 'register' %}" class="btn btn-primary">Register as Student</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h3>For Universities</h3>
+                                <p>Register your university and manage hostel accommodations.</p>
+                                <a href="{% url 'register_university' %}" class="btn btn-primary">Register University</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <p>Already have an account? <a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

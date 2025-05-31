@@ -1,0 +1,64 @@
+{% extends 'hostel/base.html' %}
+
+{% block title %}{{ hostel.name }} - Hostel Allotment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>Hostel Information</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Name:</strong> {{ hostel.name }}</p>
+                <p><strong>Address:</strong> {{ hostel.address }}</p>
+                <p><strong>Total Capacity:</strong> {{ hostel.total_capacity }}</p>
+                <p><strong>Available Capacity:</strong> {{ hostel.available_capacity }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Rooms</h4>
+                <a href="{% url 'add_room' hostel.id %}" class="btn btn-primary">Add New Room</a>
+            </div>
+            <div class="card-body">
+                {% if rooms %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Room Number</th>
+                                    <th>Type</th>
+                                    <th>Floor</th>
+                                    <th>Capacity</th>
+                                    <th>Available</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for room in rooms %}
+                                    <tr>
+                                        <td>{{ room.room_number }}</td>
+                                        <td>{{ room.get_room_type_display }}</td>
+                                        <td>{{ room.floor }}</td>
+                                        <td>{{ room.capacity }}</td>
+                                        <td>{{ room.available_capacity }}</td>
+                                        <td>
+                                            <a href="{% url 'edit_room' hostel.id room.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center">No rooms found. Add your first room!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
