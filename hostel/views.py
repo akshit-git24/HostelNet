@@ -19,14 +19,11 @@ def user_login(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'Login successful!')
-            
-            # Redirect based on user type
             if hasattr(user, 'university_admin'):
                 return redirect('university_dashboard')
             return redirect('dashboard')
         else:
             messages.error(request, 'Invalid username or password.')
-    
     return render(request, 'hostel/login.html')
 
 def user_logout(request):
@@ -54,7 +51,6 @@ def register(request):
             student = student_form.save(commit=False)
             student.user = user
             student.save()
-            
             login(request, user)
             messages.success(request, 'Registration successful! Please wait for the verification set by the office.')
             return redirect('dashboard')
@@ -62,10 +58,7 @@ def register(request):
         user_form = UserRegistrationForm()
         student_form = StudentProfileForm()
     
-    return render(request, 'hostel/register.html', {
-        'user_form': user_form,
-        'student_form': student_form
-    })
+    return render(request, 'hostel/register.html',{'user_form': user_form,'student_form': student_form})
 
 def register_university(request):
     if request.method == 'POST':
@@ -77,7 +70,6 @@ def register_university(request):
             university = university_form.save(commit=False)
             university.admin_user = user
             university.save()
-            
             login(request, user)
             messages.success(request, 'University registration successful! Please wait for admin verification.')
             return redirect('university_dashboard')
