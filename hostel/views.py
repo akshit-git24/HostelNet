@@ -5,10 +5,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.utils import timezone
 from django.http import JsonResponse
 from .models import Student, HostelApplication, Hostel, University, Room
-from .forms import (
-    UserRegistrationForm, StudentProfileForm, HostelApplicationForm,
-    UniversityRegistrationForm, HostelForm, RoomForm
-)
+from .forms import (UserRegistrationForm, StudentProfileForm, HostelApplicationForm,UniversityRegistrationForm, HostelForm, RoomForm)
 
 def user_login(request):
     if request.method == 'POST':
@@ -76,21 +73,14 @@ def register_university(request):
     else:
         user_form = UserRegistrationForm()
         university_form = UniversityRegistrationForm()
-    
-    return render(request, 'hostel/register_university.html', {
-        'user_form': user_form,
-        'university_form': university_form
-    })
+    return render(request, 'hostel/register_university.html',{'user_form': user_form,'university_form': university_form})
 
 @login_required
 @user_passes_test(is_university_admin)
 def university_dashboard(request):
     university = request.user.university_admin
     hostels = Hostel.objects.filter(university=university)
-    return render(request, 'hostel/university_dashboard.html', {
-        'university': university,
-        'hostels': hostels
-    })
+    return render(request, 'hostel/university_dashboard.html',{'university': university,'hostels': hostels})
 
 @login_required
 @user_passes_test(is_university_admin)
@@ -99,7 +89,6 @@ def manage_hostel(request, hostel_id=None):
     hostel = None
     if hostel_id:
         hostel = get_object_or_404(Hostel, id=hostel_id, university=university)
-    
     if request.method == 'POST':
         form = HostelForm(request.POST, instance=hostel)
         if form.is_valid():
@@ -110,11 +99,7 @@ def manage_hostel(request, hostel_id=None):
             return redirect('university_dashboard')
     else:
         form = HostelForm(instance=hostel)
-    
-    return render(request, 'hostel/manage_hostel.html', {
-        'form': form,
-        'hostel': hostel
-    })
+    return render(request, 'hostel/manage_hostel.html',{'form': form,'hostel': hostel})
 
 @login_required
 @user_passes_test(is_university_admin)
@@ -123,8 +108,7 @@ def manage_room(request, hostel_id, room_id=None):
     hostel = get_object_or_404(Hostel, id=hostel_id, university=university)
     room = None
     if room_id:
-        room = get_object_or_404(Room, id=room_id, hostel=hostel)
-    
+        room = get_object_or_404(Room, id=room_id, hostel=hostel)  
     if request.method == 'POST':
         form = RoomForm(request.POST, instance=room)
         if form.is_valid():
@@ -135,12 +119,7 @@ def manage_room(request, hostel_id, room_id=None):
             return redirect('view_hostel', hostel_id=hostel.id)
     else:
         form = RoomForm(instance=room)
-    
-    return render(request, 'hostel/manage_room.html', {
-        'form': form,
-        'room': room,
-        'hostel': hostel
-    })
+    return render(request,'hostel/manage_room.html',{'form': form,'room': room,'hostel': hostel})
 
 @login_required
 @user_passes_test(is_university_admin)
@@ -148,20 +127,14 @@ def view_hostel(request, hostel_id):
     university = request.user.university_admin
     hostel = get_object_or_404(Hostel, id=hostel_id, university=university)
     rooms = Room.objects.filter(hostel=hostel)
-    return render(request, 'hostel/view_hostel.html', {
-        'hostel': hostel,
-        'rooms': rooms
-    })
+    return render(request,'hostel/view_hostel.html',{'hostel': hostel,'rooms': rooms})
 
 @login_required
 def dashboard(request):
     try:
         student = Student.objects.get(user=request.user)
         applications = HostelApplication.objects.filter(student=student)
-        return render(request, 'hostel/dashboard.html', {
-            'student': student,
-            'applications': applications
-        })
+        return render(request, 'hostel/dashboard.html',{'student': student,'applications': applications})
     except Student.DoesNotExist:
         return redirect('register')
 
@@ -179,18 +152,14 @@ def apply_hostel(request):
                 application = form.save(commit=False)
                 application.student = student
                 application.save()
-                
-                # Update room capacity
                 if application.room:
                     room = application.room
                     room.available_capacity -= 1
                     room.save()
-                
                 messages.success(request, 'Application submitted successfully!')
                 return redirect('dashboard')
         else:
             form = HostelApplicationForm(student=student)
-        
         return render(request, 'hostel/apply_hostel.html', {'form': form})
     except Student.DoesNotExist:
         return redirect('register')
