@@ -1,4 +1,4 @@
-from database import get_user
+from .database import get_user
 
 def find_user(username: str):
     print(f"Searching for user: {username}")
